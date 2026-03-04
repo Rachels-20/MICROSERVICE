@@ -1,4 +1,4 @@
-package com.rachel.produk.Controller;
+package com.rachel.produk.controller;
 
 import java.util.List;
 
