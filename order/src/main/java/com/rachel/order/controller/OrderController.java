@@ -14,6 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.rachel.order.model.Order;
 import com.rachel.order.service.OrderService;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import com.rachel.order.vo.ResponseTemplate;
+import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
 @RequestMapping("/api/order")
@@ -37,7 +41,20 @@ public class OrderController {
         return orderService.createOrder(order);
     }
 
-    @DeleteMapping
+    @GetMapping(path = "/produk/{id}")
+    public List<ResponseTemplate> getOrderWithProdukById(@PathVariable("id") long id) {
+        return orderService.getOrderWithProdukById(id);
+    }
+
+    @PutMapping(path = "{id}")
+    public void updateOrder(@PathVariable("id") long id,
+            @RequestParam(required = false) int jumlah,
+            @RequestParam(required = false) String tanggal,
+            @RequestParam(required = false) String status) {
+        orderService.update(id, jumlah, tanggal, status);
+    }
+
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteOrder(@PathVariable Long id) {
         orderService.deleteOrder(id);
         return ResponseEntity.ok().build();

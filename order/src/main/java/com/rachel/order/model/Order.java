@@ -17,4 +17,5 @@ public class Order {
     private double harga;
     private int jumlah;
     private double total;
+    private String tanggal;
 }
