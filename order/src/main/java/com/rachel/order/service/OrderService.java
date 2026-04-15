@@ -42,10 +42,18 @@ public class OrderService {
 
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    public Order createOrder(Order order) {
+    public Order createOrder(Order order, String username, String email, String role) {
         order.setTanggal(LocalDateTime.now().format(formatter));
+        order.setUsername(username);
+        order.setEmail(email);
+        order.setRole(role);
+
         Order savedOrder = orderRepository.save(order);
+
         System.out.println("ID dikirim: " + savedOrder.getId());
+        System.out.println("Username dikirim: " + savedOrder.getUsername());
+        System.out.println("Role: " + savedOrder.getRole());
+
         rabbitTemplate.convertAndSend(
                 "",
                 "order.notification.queue",

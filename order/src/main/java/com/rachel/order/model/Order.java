@@ -19,4 +19,6 @@ public class Order {
     private double total;
     private String email;
     private String tanggal;
+    private String username;
+    private String role;
 }

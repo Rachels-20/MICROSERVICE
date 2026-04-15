@@ -17,6 +17,9 @@ import com.rachel.order.service.OrderService;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.rachel.order.vo.ResponseTemplate;
+
+import jakarta.servlet.http.HttpServletRequest;
+
 import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
@@ -37,8 +40,14 @@ public class OrderController {
     }
 
     @PostMapping
-    public Order createOrder(@RequestBody Order order) {
-        return orderService.createOrder(order);
+    public Order createOrder(@RequestBody Order order,
+            jakarta.servlet.http.HttpServletRequest request) {
+
+        String username = (String) request.getAttribute("username");
+        String email = (String) request.getAttribute("email");
+        String role = (String) request.getAttribute("role");
+
+        return orderService.createOrder(order, username, email, role);
     }
 
     @GetMapping(path = "/produk/{id}")

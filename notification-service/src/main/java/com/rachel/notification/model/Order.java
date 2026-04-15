@@ -10,6 +10,7 @@ public class Order {
     private double total;
     private String email;
     private String tanggal;
+    private String username;
 
     public long getId() {
         return id;
@@ -73,5 +74,13 @@ public class Order {
 
     public void setTanggal(String tanggal) {
         this.tanggal = tanggal;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

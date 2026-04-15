@@ -13,20 +13,25 @@ public class NotificationService {
     private JavaMailSender mailSender;
 
     public void sendEmail(Order order) {
+        if (order.getEmail() == null || order.getEmail().isBlank()) {
+            System.out.println("Email tidak tersedia. Notifikasi dibatalkan.");
+            return;
+        }
+
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(order.getEmail());
         message.setSubject("Order Berhasil");
-        String isiEmail = "Order berhasil dibuat!\n\n"
-                + "ID Order: " + order.getId() + "\n"
-                + "ID Pelanggan: " + order.getId_pelanggan() + "\n"
-                + "ID Produk: " + order.getId_produk() + "\n"
-                + "Jumlah: " + order.getJumlah() + "\n"
-                + "Total: " + order.getTotal() + "\n"
-                + "Tanggal: " + order.getTanggal();
+
+        String isiEmail = "Username: " + order.getUsername() + "\n" +
+                "ID Order: " + order.getId() + "\n" +
+                "ID Pelanggan: " + order.getId_pelanggan() + "\n" +
+                "ID Produk: " + order.getId_produk() + "\n" +
+                "Jumlah: " + order.getJumlah() + "\n" +
+                "Total: " + order.getTotal() + "\n" +
+                "Tanggal: " + order.getTanggal();
 
         message.setText(isiEmail);
         mailSender.send(message);
-
         System.out.println("Email berhasil dikirim ke: " + order.getEmail());
     }
 }

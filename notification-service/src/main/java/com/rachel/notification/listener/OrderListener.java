@@ -14,9 +14,15 @@ public class OrderListener {
 
     @RabbitListener(queues = "order.notification.queue")
     public void receiveOrder(Order order) {
-        System.out.println("Order baru diterima");
-        System.out.println("ID: " + order.getId());
-        System.out.println("Email: " + order.getEmail());
-        notificationService.sendEmail(order);
+        try {
+            System.out.println("Order baru diterima");
+            System.out.println("ID: " + order.getId());
+            System.out.println("Email: " + order.getEmail());
+            System.out.println("Username: " + order.getUsername());
+
+            notificationService.sendEmail(order);
+        } catch (Exception e) {
+            System.err.println("Gagal mengirim email: " + e.getMessage());
+        }
     }
 }
