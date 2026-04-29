@@ -17,59 +17,58 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final JwtUtil jwtUtil;
+        private final JwtUtil jwtUtil;
 
-    @Override
-    protected void doFilterInternal(HttpServletRequest request,
-            HttpServletResponse response,
-            FilterChain filterChain)
-            throws ServletException, IOException {
+        @Override
+        protected void doFilterInternal(HttpServletRequest request,
+                        HttpServletResponse response,
+                        FilterChain filterChain)
+                        throws ServletException, IOException {
 
-        String header = request.getHeader("Authorization");
+                String header = request.getHeader("Authorization");
 
-        String token = header.substring(7);
+                String token = header.substring(7);
 
-        try {
-            jwtUtil.validateToken(token);
+                try {
+                        jwtUtil.validateToken(token);
 
-            String username = jwtUtil.extractUsername(token);
-            String email = jwtUtil.extractEmail(token);
-            String role = jwtUtil.extractRole(token);
+                        String username = jwtUtil.extractUsername(token);
+                        String email = jwtUtil.extractEmail(token);
+                        String role = jwtUtil.extractRole(token);
 
-            List<GrantedAuthority> authorities = List.of(
-                    new SimpleGrantedAuthority("ROLE_" + role));
+                        List<GrantedAuthority> authorities = List.of(
+                                        new SimpleGrantedAuthority("ROLE_" + role));
 
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                    username,
-                    null,
-                    authorities);
+                        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                                        username,
+                                        null,
+                                        authorities);
 
-            authentication.setDetails(
-                    new WebAuthenticationDetailsSource().buildDetails(request));
+                        authentication.setDetails(
+                                        new WebAuthenticationDetailsSource().buildDetails(request));
 
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+                        SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            request.setAttribute("username", username);
-            request.setAttribute("email", email);
-            request.setAttribute("role", role);
+                        request.setAttribute("username", username);
+                        request.setAttribute("email", email);
+                        request.setAttribute("role", role);
 
-        } catch (ExpiredJwtException e) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED,
-                    "Token telah kedaluwarsa");
-            return;
-        } catch (JwtException e) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED,
-                    "Token tidak valid");
-            return;
+                } catch (ExpiredJwtException e) {
+                        response.sendError(HttpServletResponse.SC_UNAUTHORIZED,
+                                        "Token telah kedaluwarsa");
+                        return;
+                } catch (JwtException e) {
+                        response.sendError(HttpServletResponse.SC_UNAUTHORIZED,
+                                        "Token tidak valid");
+                        return;
+                }
+
+                filterChain.doFilter(request, response);
         }
-
-        filterChain.doFilter(request, response);
-    }
 }
