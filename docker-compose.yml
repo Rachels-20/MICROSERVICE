@@ -1,0 +1,119 @@
+services:
+
+  eureka:
+    image: ms-eureka
+    build: ./eureka
+    container_name: ms-eureka
+    ports:
+      - "8762:8761"
+
+  authentication-service:
+    image: ms-authentication-service
+    build: ./authentication-service
+    container_name: ms-authentication-service
+    ports:
+      - "8191:8091"
+    depends_on:
+      - eureka
+
+  produk:
+    image: ms-produk
+    build: ./produk
+    container_name: ms-produk
+    ports:
+      - "8181:8081"
+    depends_on:
+      - eureka
+
+  order:
+    image: ms-order
+    build: ./order
+    container_name: ms-order
+    ports:
+      - "8183:8083"
+    depends_on:
+      - eureka
+
+  pelanggan:
+    image: ms-pelanggan
+    build: ./pelanggan
+    container_name: ms-pelanggan
+    ports:
+      - "8188:8088"
+    depends_on:
+      - eureka
+
+  producer:
+    image: ms-producer
+    build: ./producer
+    container_name: ms-producer
+    ports:
+      - "8193:8093"
+    depends_on:
+      - eureka
+
+  consumer:
+    image: ms-consumer
+    build: ./consumer
+    container_name: ms-consumer
+    ports:
+      - "8185:8085"
+    depends_on:
+      - eureka
+
+  notification-service:
+    image: ms-notification-service
+    build: ./notification-service
+    container_name: ms-notification-service
+    ports:
+      - "8192:8092"
+    depends_on:
+      - eureka
+
+  gateway-service:
+    image: ms-gateway-service
+    build: ./gateway-service
+    container_name: ms-gateway-service
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+    ports:
+      - "9001:9000"
+    depends_on:
+      - eureka
+
+  prometheus:
+    image: prom/prometheus
+    container_name: ms-prometheus
+
+    ports:
+      - "9091:9090"
+
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+
+    depends_on:
+      - eureka
+
+  grafana:
+    image: grafana/grafana
+    container_name: ms-grafana
+
+    ports:
+      - "3001:3000"
+
+    depends_on:
+      - prometheus
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: ms-rabbitmq
+
+    ports:
+      - "5673:5672"
+      - "15673:15672"
+
+    environment:
+      RABBITMQ_DEFAULT_USER: user
+      RABBITMQ_DEFAULT_PASS: password
+
+    restart: unless-stopped

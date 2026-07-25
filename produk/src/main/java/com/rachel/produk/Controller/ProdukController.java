@@ -37,7 +37,7 @@ public class ProdukController {
         return produkService.createProduk(produk);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteProduk(@PathVariable Long id) {
         produkService.deleteProduk(id);
         return ResponseEntity.ok().build();

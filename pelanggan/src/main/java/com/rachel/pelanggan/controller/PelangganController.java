@@ -37,7 +37,7 @@ public class PelangganController {
         return pelangganService.createPelanggan(pelanggan);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> deletePelanggan(@PathVariable Long id) {
         pelangganService.deletePelanggan(id);
         return ResponseEntity.ok().build();

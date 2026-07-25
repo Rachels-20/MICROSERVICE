@@ -1,0 +1,10 @@
+global:
+  scrape_interval: 5s
+
+scrape_configs:
+  - job_name: 'spring-services'
+
+    metrics_path: '/actuator/prometheus'
+
+    eureka_sd_configs:
+      - server: http://ms-eureka:8761/eureka
